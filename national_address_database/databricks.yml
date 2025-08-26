@@ -1,0 +1,56 @@
+# This is a Databricks asset bundle definition for cdc_snapshot.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: national_address
+
+variables:
+  catalog:
+    default: usa
+  warehouse_id:
+    default: 12345
+
+resources:
+  schemas: 
+    national_address_schema:
+      catalog_name: ${var.catalog}
+      name: ${workspace.current_user.short_name}_national_address
+  volumes:
+    national_address_volume:
+      catalog_name: ${var.catalog}
+      name: data
+      schema_name: ${resources.schemas.national_address_schema.name}
+  pipelines:
+    national_address_pipeline:
+      name: ${workspace.current_user.short_name}_national_address_pipeline
+      catalog: ${var.catalog}
+      schema: ${resources.schemas.national_address_schema.name}
+      serverless: true
+      development: true
+      configuration:
+        catalog: ${var.catalog}
+        schema: ${resources.schemas.national_address_schema.name}
+      libraries:
+        - file:
+            path: src/nad/bronze_nad.sql
+        - file:
+            path: src/nad/silver_nad.sql
+        - file:
+            path: src/nad/gold_nad.sql
+  clusters:
+    geospatial_cluster:
+      cluster_name: ${workspace.current_user.short_name}_national_address_cluster
+      spark_version: 17.1.x-scala2.13
+      node_type_id: i3en.large
+      autotermination_minutes: 45
+      num_workers: 3
+      data_security_mode: USER_ISOLATION
+      spark_conf:
+        'spark.databricks.geo.st.enabled': 'true'
+  dashboards:
+    national_address_dashboard:
+      display_name: National Address Database
+      file_path: src/nad/National_Address_Database.lvdash.json
+      warehouse_id: ${var.warehouse_id}
+
+workspace:
+  profile: DEFAULT
