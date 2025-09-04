@@ -1,0 +1,39 @@
+# This is a Databricks asset bundle definition for cdc_snapshot.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: cdc_snapshot
+
+variables:
+  catalog:
+    default: usa
+
+resources:
+  volumes:
+    cdc_snapshot_volume:
+      catalog_name: ${var.catalog}
+      name: temp
+      schema_name: ${resources.schemas.cdc_snapshot_schema.name}
+  schemas: 
+    cdc_snapshot_schema:
+      catalog_name: ${var.catalog}
+      name: ${workspace.current_user.short_name}_cdc_snapshot
+  pipelines:
+    cdc_snapshot:
+      name: ${workspace.current_user.short_name}_cdc_snapshot_pipeline
+      catalog: ${var.catalog}
+      schema: ${resources.schemas.cdc_snapshot_schema.name}
+      serverless: true
+      libraries:
+        - file:
+            path: ./src/bronze_person.sql
+        - file:
+            path: ./src/person_snapshot_view.sql
+        - file:
+            path: ./src/process_snapshot.py
+
+targets:
+  cdc_snapshot_target:
+    default: true
+
+workspace:
+  profile: fe

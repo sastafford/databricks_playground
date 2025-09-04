@@ -1,4 +1,4 @@
-CREATE STREAMING TABLE usa.geospatial_scott_stafford.bronze_national_address AS
+CREATE STREAMING TABLE bronze_national_address AS
   SELECT
     OID_, 
     AddNum_Pre, 
@@ -62,7 +62,7 @@ CREATE STREAMING TABLE usa.geospatial_scott_stafford.bronze_national_address AS
     DataSet_ID
   FROM
     STREAM read_files(
-      concat("/Volumes/usa/geospatial_scott_stafford/data/nad"),
+      concat("/Volumes/usa/scott_stafford_national_address/data/nad"),
       format => "csv",
       header => true,
       schema => 'OID_ STRING, AddNum_Pre STRING, Add_Number STRING, AddNum_Suf STRING, AddNo_Full STRING,

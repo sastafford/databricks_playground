@@ -26,6 +26,7 @@ resources:
       schema: ${resources.schemas.national_address_schema.name}
       serverless: true
       development: true
+      channel: PREVIEW
       configuration:
         catalog: ${var.catalog}
         schema: ${resources.schemas.national_address_schema.name}
@@ -48,8 +49,8 @@ resources:
         'spark.databricks.geo.st.enabled': 'true'
   dashboards:
     national_address_dashboard:
-      display_name: National Address Database
-      file_path: src/nad/National_Address_Database.lvdash.json
+      display_name: National Address
+      file_path: ./National_Address_Database.lvdash.json
       warehouse_id: ${var.warehouse_id}
 
 workspace:
