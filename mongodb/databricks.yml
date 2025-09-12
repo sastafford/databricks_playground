@@ -1,0 +1,27 @@
+# This is a Databricks asset bundle definition for cdc_snapshot.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: mongodb
+
+variables:
+  catalog:
+    default: usa
+
+resources:
+  schemas: 
+    mongodb_schema:
+      catalog_name: ${var.catalog}
+      name: ${workspace.current_user.short_name}_mongodb
+  volumes:
+    mongodb_volume:
+      catalog_name: ${var.catalog}
+      name: temp
+      schema_name: ${resources.schemas.mongodb_schema.name}
+  
+
+targets:
+  mongodb_target:
+    default: true
+
+workspace:
+  profile: DEFAULT
