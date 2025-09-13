@@ -1,0 +1,34 @@
+# This is a Databricks asset bundle definition for the Movies Lakehouse.
+# See https://docs.databricks.com/dev-tools/bundles/index.html for documentation.
+bundle:
+  name: movies
+
+variables:
+  catalog:
+    default: usa
+
+resources:
+  schemas: 
+    movies_schema:
+      catalog_name: ${var.catalog}
+      name: ${workspace.current_user.short_name}_movies
+  volumes:
+    movies_volume:
+      catalog_name: ${var.catalog}
+      name: temp
+      schema_name: ${resources.schemas.movies_schema.name}
+  pipelines:
+    movies_pipeline:
+      name: ${workspace.current_user.short_name}_movies_pipeline
+      catalog: ${var.catalog}
+      schema: ${resources.schemas.movies_schema.name}
+      libraries:
+        - file:
+            path: ./src/bronze.py
+
+targets:
+  movies_target:
+    default: true
+
+workspace:
+  profile: DEFAULT
