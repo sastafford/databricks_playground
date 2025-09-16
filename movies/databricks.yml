@@ -19,12 +19,24 @@ resources:
       schema_name: ${resources.schemas.movies_schema.name}
   pipelines:
     movies_pipeline:
-      name: ${workspace.current_user.short_name}_movies_pipeline
-      catalog: ${var.catalog}
-      schema: ${resources.schemas.movies_schema.name}
-      libraries:
-        - file:
-            path: ./src/bronze.py
+      name: movies_pipeline
+    libraries:
+      - glob:
+          include:./movies_pipeline/transformations/bronze_imdb_movies.sql
+      - glob:
+          include: ./movies_pipeline/transformations/bronze_mongodb_movies.sql
+      - glob:
+          include: ./movies_pipeline/transformations/silver_movies.sql
+      - glob:
+          include: ./movies_pipeline/transformations/gold_genre_analysis.sql
+    schema: movies
+    continuous: false
+    development: true
+    photon: true
+    channel: CURRENT
+    catalog: usa
+    serverless: true
+    root_path: ./movies_pipeline
 
 targets:
   movies_target:
