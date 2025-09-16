@@ -20,9 +20,83 @@
       "queryLines": [
         "SELECT * FROM usa.movies.bronze_imdb_movies;"
       ]
+    },
+    {
+      "name": "3d31630a",
+      "displayName": "Top 10 Genres",
+      "queryLines": [
+        "SELECT *\n",
+        "FROM usa.movies.gold_genre_analysis"
+      ]
     }
   ],
   "pages": [
+    {
+      "name": "0641fbdf",
+      "displayName": "Top 10 Genres",
+      "layout": [
+        {
+          "widget": {
+            "name": "04067e65",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "3d31630a",
+                  "fields": [
+                    {
+                      "name": "sum",
+                      "expression": "`sum`"
+                    },
+                    {
+                      "name": "genre",
+                      "expression": "`genre`"
+                    }
+                  ],
+                  "disaggregated": true
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pie",
+              "encodings": {
+                "angle": {
+                  "fieldName": "sum",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "sum"
+                },
+                "color": {
+                  "fieldName": "genre",
+                  "scale": {
+                    "type": "categorical"
+                  },
+                  "displayName": "genre"
+                },
+                "label": {
+                  "show": true
+                },
+                "extra": [
+                  {
+                    "fieldName": "genre",
+                    "displayName": "genre"
+                  }
+                ]
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 5,
+            "height": 8
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    },
     {
       "name": "page1",
       "displayName": "Silver",
