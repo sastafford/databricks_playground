@@ -38,3 +38,11 @@ FROM STREAM(silver_imdb_movies)
 KEYS (id)
 APPLY AS DELETE WHEN operationType = "delete"
 SEQUENCE BY wallTime;
+
+CREATE OR REFRESH MATERIALIZED VIEW report_primarykey_tests(
+  CONSTRAINT unique_pk EXPECT (num_entries = 1)
+)
+AS 
+SELECT id, count(*) as num_entries
+FROM silver_movies
+GROUP BY id
