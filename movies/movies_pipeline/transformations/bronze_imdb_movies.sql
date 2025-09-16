@@ -5,7 +5,7 @@ CREATE FLOW
   imdb_movies_incremental
 AS INSERT INTO
   bronze_imdb_movies BY NAME
-SELECT * 
+SELECT *, now() AS wallTime
 FROM STREAM read_files(
   "/Volumes/usa/movies/temp/imdb/incremental/",
   format => "csv",
@@ -19,7 +19,7 @@ FROM STREAM read_files(
 CREATE FLOW imdb_movies_backfill
 AS INSERT INTO ONCE
   bronze_imdb_movies BY NAME
-SELECT *
+SELECT *, now() AS wallTime
 FROM read_files(
   "/Volumes/usa/movies/temp/imdb/backfill/",
   format => "csv",

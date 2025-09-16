@@ -4,6 +4,7 @@ CREATE OR REFRESH STREAMING TABLE silver_movies;
 CREATE TEMPORARY VIEW silver_imdb_movies AS
   SELECT 
     CAST(REGEXP_REPLACE(tconst, '^tt0*', '') AS INT) as id, 
+    wallTime,
     primaryTitle as title, 
     split(genres, ',') as genres, 
     startYear as year, 
@@ -26,6 +27,13 @@ CREATE TEMPORARY VIEW silver_mongodb_movies AS
 CREATE FLOW mongodb_cdc_movies AS
 AUTO CDC INTO silver_movies
 FROM STREAM(silver_mongodb_movies)
+KEYS (id)
+APPLY AS DELETE WHEN operationType = "delete"
+SEQUENCE BY wallTime;
+
+CREATE FLOW imdb_cdc_movies AS
+AUTO CDC INTO silver_movies
+FROM STREAM(silver_imdb_movies)
 KEYS (id)
 APPLY AS DELETE WHEN operationType = "delete"
 SEQUENCE BY wallTime;
