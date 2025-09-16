@@ -3,7 +3,8 @@ CREATE OR REFRESH STREAMING TABLE silver_movies;
 
 CREATE TEMPORARY VIEW silver_imdb_movies AS
   SELECT 
-    CAST(REGEXP_REPLACE(tconst, '^tt0*', '') AS INT) as id, 
+    --CAST(REGEXP_REPLACE(tconst, '^tt0*', '') AS STRING) as id, 
+    tconst as id,
     wallTime,
     primaryTitle as title, 
     split(genres, ',') as genres, 
@@ -15,7 +16,7 @@ CREATE TEMPORARY VIEW silver_imdb_movies AS
 
 CREATE TEMPORARY VIEW silver_mongodb_movies AS
   SELECT 
-    imdb.id as id, 
+    _id as id, 
     wallTime,
     title, 
     genres, 

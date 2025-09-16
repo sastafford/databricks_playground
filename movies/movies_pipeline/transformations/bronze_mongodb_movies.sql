@@ -4,10 +4,11 @@ CREATE FLOW mongodb_movies_incremental AS
 INSERT INTO 
   bronze_mongodb_movies BY NAME
 SELECT 
+  documentKey._id as _id,
   operationType, 
   ns.*, 
   CAST(wallTime AS TIMESTAMP) AS wallTime, 
-  fullDocument.* EXCEPT (awards, imdb, num_mflix_comments, released, runtime, year)
+  fullDocument.* EXCEPT (_id, awards, imdb, num_mflix_comments, released, runtime, year)
 FROM STREAM(read_files(
   "/Volumes/usa/movies/temp/mongodb/incremental/",
   format => "json"
